@@ -2,7 +2,7 @@
     "name": "vscode-rockcraft-ide",
     "displayName": "Rockcraft IDE",
     "description": "VS Code extension for ROCK development",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "babakks",
     "repository": {
         "type": "git",

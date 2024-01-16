@@ -12,7 +12,7 @@ import { integrateWithYAMLExtension } from './schema';
 import { RockcraftTreeDataProvider } from './tree';
 import { DocumentWatcher } from './watcher';
 
-const TELEMETRY_INSTRUMENTATION_KEY = 'ae17c685-b070-4d4a-a50d-c43ba4fb9b33';
+const TELEMETRY_INSTRUMENTATION_KEY = '804eccd9-3d59-4aec-9fcc-9eec10a562c4';
 
 export async function activate(context: ExtensionContext) {
     const reporter = new TelemetryReporter(context.extensionMode === ExtensionMode.Production ? TELEMETRY_INSTRUMENTATION_KEY : '');
