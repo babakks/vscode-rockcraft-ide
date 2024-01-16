@@ -1,0 +1,132 @@
+{
+    "name": "vscode-rockcraft-ide",
+    "displayName": "Rockcraft IDE",
+    "description": "VS Code extension for ROCK development",
+    "version": "0.0.1",
+    "publisher": "babakks",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/babakks/vscode-rockcraft-ide"
+    },
+    "engines": {
+        "vscode": "^1.73.0"
+    },
+    "categories": [
+        "Other",
+        "Programming Languages"
+    ],
+    "keywords": [
+        "rock",
+        "ROCK",
+        "rockcraft",
+        "ide"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "icon": "image/logo-128x128.png",
+    "main": "./out/main.js",
+    "extensionDependencies": [],
+    "contributes": {
+        "commands": [
+            {
+                "command": "rockcraft-ide.discoverRocks",
+                "title": "Discover ROCKs",
+                "category": "Rockcraft IDE",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "rockcraft-ide.revealRockDirectory",
+                "title": "Reveal ROCK Directory in Explorer",
+                "category": "Rockcraft IDE",
+                "icon": "$(folder-opened)"
+            },
+            {
+                "command": "rockcraft-ide.revealRockFile",
+                "title": "Reveal ROCK File in Explorer",
+                "category": "Rockcraft IDE",
+                "icon": "$(folder-opened)"
+            },
+            {
+                "command": "rockcraft-ide.resetStateGlobal",
+                "title": "Reset State (Global)",
+                "category": "Rockcraft IDE"
+            },
+            {
+                "command": "rockcraft-ide.resetStateWorkspace",
+                "title": "Reset State (Workspace)",
+                "category": "Rockcraft IDE"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "title": "Rockcraft IDE",
+                    "icon": "image/logo-128x128.png",
+                    "id": "rockcraft"
+                }
+            ]
+        },
+        "views": {
+            "rockcraft": [
+                {
+                    "id": "rockcraft-rocks",
+                    "name": "ROCKs"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "when": "view == rockcraft-rocks",
+                    "group": "navigation",
+                    "command": "rockcraft-ide.discoverRocks"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "when": "view == rockcraft-rocks && viewItem == rock",
+                    "group": "inline",
+                    "command": "rockcraft-ide.revealRockDirectory"
+                },
+                {
+                    "when": "view == rockcraft-rocks && viewItem == rockcraft",
+                    "group": "inline",
+                    "command": "rockcraft-ide.revealRockFile"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "clean": "rm -rf out",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run clean && npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test-vscode": "node ./out/test/vscode/runTest.js",
+        "test": "mocha 'out/**/*.test.js' --ignore 'out/test/vscode/**/*' --ui tdd"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.3.9",
+        "@types/glob": "^7.2.0",
+        "@types/ini": "^1.3.32",
+        "@types/js-yaml": "^4.0.8",
+        "@types/mocha": "^9.1.1",
+        "@types/node": "^14.18.63",
+        "@types/vscode": "^1.73.0",
+        "@typescript-eslint/eslint-plugin": "^5.62.0",
+        "@typescript-eslint/parser": "^5.62.0",
+        "@vscode/test-electron": "^2.3.6",
+        "chai": "^4.3.10",
+        "eslint": "^8.52.0",
+        "glob": "^7.2.3",
+        "mocha": "^9.2.2",
+        "typescript": "^4.9.5"
+    },
+    "dependencies": {
+        "@vscode/extension-telemetry": "^0.8.5",
+        "handlebars": "^4.7.8",
+        "yaml": "^2.3.3"
+    }
+}

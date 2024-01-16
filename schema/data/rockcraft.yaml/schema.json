@@ -1,0 +1,671 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "rockcraft://schema/rockcraft.json",
+    "$defs": {
+        "string-to-string-map": {
+            "type": "object",
+            "patternProperties": {
+                "^.+$": {
+                    "type": "string"
+                }
+            }
+        },
+        "supported-architectures": {
+            "type": "string",
+            "enum": [
+                "amd64",
+                "arm64",
+                "armhf",
+                "i386",
+                "ppc64el",
+                "riscv64",
+                "s390x"
+            ]
+        },
+        "pebble-duration": {
+            "type": "string",
+            "pattern": "^\\d+(ms|s|m|h)$"
+        }
+    },
+    "properties": {
+        "name": {
+            "type": "string",
+            "allOf": [
+                {
+                    "pattern": "^[a-z]($|[a-z0-9-]*[a-z0-9]$)"
+                },
+                {
+                    "not": {
+                        "pattern": "--"
+                    }
+                }
+            ],
+            "markdownDescription": "{{{include 'name'}}}"
+        },
+        "title": {
+            "type": "string",
+            "markdownDescription": "{{{include 'title'}}}"
+        },
+        "summary": {
+            "type": "string",
+            "markdownDescription": "{{{include 'summary'}}}"
+        },
+        "description": {
+            "type": "string",
+            "markdownDescription": "{{{include 'description'}}}"
+        },
+        "version": {
+            "type": "string",
+            "markdownDescription": "{{{include 'version'}}}"
+        },
+        "base": {
+            "type": "string",
+            "enum": [
+                "ubuntu@20.04",
+                "ubuntu@22.04",
+                "bare"
+            ],
+            "markdownDescription": "{{{include 'base'}}}"
+        },
+        "build-base": {
+            "type": "string",
+            "enum": [
+                "ubuntu@20.04",
+                "ubuntu@22.04"
+            ],
+            "markdownDescription": "{{{include 'build-base'}}}"
+        },
+        "license": {
+            "type": "string",
+            "markdownDescription": "{{{include 'license'}}}"
+        },
+        "run-user": {
+            "type": "string",
+            "enum": [
+                "root",
+                "_daemon_"
+            ],
+            "markdownDescription": "{{{include 'run-user'}}}"
+        },
+        "environment": {
+            "$ref": "#/$defs/string-to-string-map",
+            "markdownDescription": "{{{include 'environment'}}}"
+        },
+        "services": {
+            "type": "object",
+            "patternProperties": {
+                "^.+$": {
+                    "type": "object",
+                    "required": [
+                        "override",
+                        "command"
+                    ],
+                    "properties": {
+                        "override": {
+                            "type": "string",
+                            "enum": [
+                                "merge",
+                                "replace"
+                            ],
+                            "markdownDescription": "{{{include 'services-entry-override'}}}"
+                        },
+                        "command": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'services-entry-command'}}}"
+                        },
+                        "summary": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'services-entry-summary'}}}"
+                        },
+                        "description": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'services-entry-description'}}}"
+                        },
+                        "startup": {
+                            "type": "string",
+                            "enum": [
+                                "enabled",
+                                "disabled"
+                            ],
+                            "default": "disabled",
+                            "markdownDescription": "{{{include 'services-entry-startup'}}}"
+                        },
+                        "after": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "markdownDescription": "{{{include 'services-entry-after'}}}"
+                        },
+                        "before": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "markdownDescription": "{{{include 'services-entry-before'}}}"
+                        },
+                        "requires": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "markdownDescription": "{{{include 'services-entry-requires'}}}"
+                        },
+                        "environment": {
+                            "$ref": "#/$defs/string-to-string-map",
+                            "markdownDescription": "{{{include 'services-entry-environment'}}}"
+                        },
+                        "user": {
+                            "type": "string",
+                            "minLength": 1,
+                            "markdownDescription": "{{{include 'services-entry-user'}}}"
+                        },
+                        "user-id": {
+                            "type": "integer",
+                            "markdownDescription": "{{{include 'services-entry-user-id'}}}"
+                        },
+                        "group": {
+                            "type": "string",
+                            "minLength": 1,
+                            "markdownDescription": "{{{include 'services-entry-group'}}}"
+                        },
+                        "group-id": {
+                            "type": "integer",
+                            "markdownDescription": "{{{include 'services-entry-group-id'}}}"
+                        },
+                        "working-dir": {
+                            "type": "string",
+                            "minLength": 1,
+                            "markdownDescription": "{{{include 'services-entry-working-dir'}}}"
+                        },
+                        "on-success": {
+                            "type": "string",
+                            "enum": [
+                                "restart",
+                                "shutdown",
+                                "failure-shutdown",
+                                "ignore"
+                            ],
+                            "default": "restart",
+                            "markdownDescription": "{{{include 'services-entry-on-success'}}}"
+                        },
+                        "on-failure": {
+                            "type": "string",
+                            "enum": [
+                                "restart",
+                                "shutdown",
+                                "success-shutdown",
+                                "ignore"
+                            ],
+                            "default": "restart",
+                            "markdownDescription": "{{{include 'services-entry-on-failure'}}}"
+                        },
+                        "on-check-failure": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.+$": {
+                                    "type": "string",
+                                    "enum": [
+                                        "restart",
+                                        "shutdown",
+                                        "success-shutdown",
+                                        "ignore"
+                                    ],
+                                    "default": "restart"
+                                }
+                            },
+                            "markdownDescription": "{{{include 'services-entry-on-check-failure'}}}"
+                        },
+                        "backoff-delay": {
+                            "$ref": "#/$defs/pebble-duration",
+                            "default": "500ms",
+                            "markdownDescription": "{{{include 'services-entry-backoff-delay'}}}"
+                        },
+                        "backoff-factor": {
+                            "type": "number",
+                            "default": 2.0,
+                            "markdownDescription": "{{{include 'services-entry-backoff-factor'}}}"
+                        },
+                        "backoff-limit": {
+                            "$ref": "#/$defs/pebble-duration",
+                            "default": "30s",
+                            "markdownDescription": "{{{include 'services-entry-backoff-limit'}}}"
+                        },
+                        "kill-delay": {
+                            "$ref": "#/$defs/pebble-duration",
+                            "default": "5s",
+                            "markdownDescription": "{{{include 'services-entry-kill-delay'}}}"
+                        }
+                    }
+                }
+            },
+            "markdownDescription": "{{{include 'services'}}}"
+        },
+        "entrypoint-service": {
+            "type": "string",
+            "markdownDescription": "{{{include 'entrypoint-service'}}}"
+        },
+        "checks": {
+            "type": "object",
+            "patternProperties": {
+                "^.+$": {
+                    "type": "object",
+                    "properties": {
+                        "override": {
+                            "type": "string",
+                            "enum": [
+                                "merge",
+                                "replace"
+                            ],
+                            "markdownDescription": "{{{include 'checks-entry-override'}}}"
+                        },
+                        "level": {
+                            "type": "string",
+                            "enum": [
+                                "alive",
+                                "ready"
+                            ],
+                            "markdownDescription": "{{{include 'checks-entry-level'}}}"
+                        },
+                        "period": {
+                            "$ref": "#/$defs/pebble-duration",
+                            "default": "10s",
+                            "markdownDescription": "{{{include 'checks-entry-period'}}}"
+                        },
+                        "timeout": {
+                            "$ref": "#/$defs/pebble-duration",
+                            "default": "3s",
+                            "markdownDescription": "{{{include 'checks-entry-timeout'}}}"
+                        },
+                        "threshold": {
+                            "type": "integer",
+                            "default": 3,
+                            "markdownDescription": "{{{include 'checks-entry-threshold'}}}"
+                        },
+                        "http": {
+                            "type": "object",
+                            "required": [
+                                "url"
+                            ],
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "markdownDescription": "{{{include 'checks-entry-http-url'}}}"
+                                },
+                                "headers": {
+                                    "$ref": "#/$defs/string-to-string-map",
+                                    "markdownDescription": "{{{include 'checks-entry-http-headers'}}}"
+                                }
+                            },
+                            "markdownDescription": "{{{include 'checks-entry-http'}}}"
+                        },
+                        "tcp": {
+                            "type": "object",
+                            "required": [
+                                "port"
+                            ],
+                            "properties": {
+                                "port": {
+                                    "type": "integer",
+                                    "markdownDescription": "{{{include 'checks-entry-tcp-port'}}}"
+                                },
+                                "host": {
+                                    "type": "string",
+                                    "default": "localhost",
+                                    "markdownDescription": "{{{include 'checks-entry-tcp-host'}}}"
+                                }
+                            },
+                            "markdownDescription": "{{{include 'checks-entry-tcp'}}}"
+                        },
+                        "exec": {
+                            "type": "object",
+                            "required": [
+                                "command"
+                            ],
+                            "properties": {
+                                "command": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "markdownDescription": "{{{include 'checks-entry-exec-command'}}}"
+                                },
+                                "service-context": {
+                                    "type": "string",
+                                    "markdownDescription": "{{{include 'checks-entry-exec-service-context'}}}"
+                                },
+                                "environment": {
+                                    "$ref": "#/$defs/string-to-string-map",
+                                    "markdownDescription": "{{{include 'checks-entry-exec-environment'}}}"
+                                },
+                                "user": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "markdownDescription": "{{{include 'checks-entry-exec-user'}}}"
+                                },
+                                "user-id": {
+                                    "type": "integer",
+                                    "markdownDescription": "{{{include 'checks-entry-exec-user-id'}}}"
+                                },
+                                "group": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "markdownDescription": "{{{include 'checks-entry-exec-group'}}}"
+                                },
+                                "group-id": {
+                                    "type": "integer",
+                                    "markdownDescription": "{{{include 'checks-entry-exec-group-id'}}}"
+                                },
+                                "working-dir": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "markdownDescription": "{{{include 'checks-entry-exec-working-dir'}}}"
+                                }
+                            },
+                            "markdownDescription": "{{{include 'checks-entry-exec'}}}"
+                        }
+                    },
+                    "required": [
+                        "override"
+                    ],
+                    "dependencies": {
+                        "http": {
+                            "allOf": [
+                                {
+                                    "not": {
+                                        "required": [
+                                            "tcp"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "not": {
+                                        "required": [
+                                            "exec"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "tcp": {
+                            "allOf": [
+                                {
+                                    "not": {
+                                        "required": [
+                                            "http"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "not": {
+                                        "required": [
+                                            "exec"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "exec": {
+                            "allOf": [
+                                {
+                                    "not": {
+                                        "required": [
+                                            "tcp"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "not": {
+                                        "required": [
+                                            "http"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "markdownDescription": "{{{include 'checks'}}}"
+        },
+        "platforms": {
+            "type": "object",
+            "minProperties": 1,
+            "patternProperties": {
+                "^.+$": {
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "build-on": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/$defs/supported-architectures"
+                                    },
+                                    "markdownDescription": "{{{include 'platforms-entry-build-on'}}}"
+                                },
+                                "build-for": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/$defs/supported-architectures"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/$defs/supported-architectures"
+                                            }
+                                        }
+                                    ],
+                                    "markdownDescription": "{{{include 'platforms-entry-build-for'}}}"
+                                }
+                            }
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "markdownDescription": "{{{include 'platforms'}}}"
+        },
+        "parts": {
+            "type": "object",
+            "minProperties": 1,
+            "patternProperties": {
+                "^.+$": {
+                    "type": "object",
+                    "properties": {
+                        "after": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "markdownDescription": "{{{include 'parts-entry-after'}}}"
+                        },
+                        "build-environment": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "minProperties": 1,
+                                "maxProperties": 1,
+                                "patternProperties": {
+                                    "^.+$": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": [
+                                [
+                                    {
+                                        "A": "VALUE-A"
+                                    },
+                                    {
+                                        "B": "VALUE-B"
+                                    }
+                                ]
+                            ],
+                            "markdownDescription": "{{{include 'parts-entry-build-environment'}}}"
+                        },
+                        "build-packages": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "markdownDescription": "{{{include 'parts-entry-build-packages'}}}"
+                        },
+                        "build-snaps": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "markdownDescription": "{{{include 'parts-entry-build-snaps'}}}"
+                        },
+                        "organize": {
+                            "$ref": "#/$defs/string-to-string-map",
+                            "markdownDescription": "{{{include 'parts-entry-organize'}}}"
+                        },
+                        "override-build": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-override-build'}}}"
+                        },
+                        "override-prime": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-override-prime'}}}"
+                        },
+                        "override-pull": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-override-pull'}}}"
+                        },
+                        "override-stage": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-override-stage'}}}"
+                        },
+                        "parse-info": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-parse-info'}}}"
+                        },
+                        "plugin": {
+                            "type": "string",
+                            "enum": [
+                                "ant",
+                                "autotools",
+                                "cmake",
+                                "dotnet",
+                                "dump",
+                                "go",
+                                "make",
+                                "maven",
+                                "meson",
+                                "nil",
+                                "npm",
+                                "python",
+                                "rust",
+                                "scons"
+                            ],
+                            "default": "nil",
+                            "markdownDescription": "{{{include 'parts-entry-plugin'}}}"
+                        },
+                        "prime": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "markdownDescription": "{{{include 'parts-entry-prime'}}}"
+                        },
+                        "source": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-source'}}}"
+                        },
+                        "source-branch": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-source-branch'}}}"
+                        },
+                        "source-checksum": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-source-checksum'}}}"
+                        },
+                        "source-commit": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-source-commit'}}}"
+                        },
+                        "source-depth": {
+                            "type": "integer",
+                            "markdownDescription": "{{{include 'parts-entry-source-depth'}}}"
+                        },
+                        "source-subdir": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-source-subdir'}}}"
+                        },
+                        "source-submodules": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "uniqueItems": true,
+                            "markdownDescription": "{{{include 'parts-entry-source-submodules'}}}"
+                        },
+                        "source-tag": {
+                            "type": "string",
+                            "markdownDescription": "{{{include 'parts-entry-source-tag'}}}"
+                        },
+                        "source-type": {
+                            "type": "string",
+                            "enum": [
+                                "deb",
+                                "file",
+                                "git",
+                                "local",
+                                "rpm",
+                                "snap",
+                                "tar",
+                                "zip"
+                            ],
+                            "markdownDescription": "{{{include 'parts-entry-source-type'}}}"
+                        },
+                        "stage": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "markdownDescription": "{{{include 'parts-entry-stage'}}}"
+                        },
+                        "stage-packages": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "markdownDescription": "{{{include 'parts-entry-stage-packages'}}}"
+                        },
+                        "stage-snaps": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "markdownDescription": "{{{include 'parts-entry-stage-snaps'}}}"
+                        }
+                    }
+                }
+            },
+            "markdownDescription": "{{{include 'parts'}}}"
+        }
+    },
+    "required": [
+        "name",
+        "summary",
+        "description",
+        "version",
+        "base",
+        "license",
+        "platforms",
+        "parts"
+    ],
+    "additionalProperties": true
+}
