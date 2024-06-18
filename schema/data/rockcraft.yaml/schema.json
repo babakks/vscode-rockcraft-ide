@@ -63,6 +63,7 @@
             "enum": [
                 "ubuntu@20.04",
                 "ubuntu@22.04",
+                "ubuntu@24.04",
                 "bare"
             ],
             "markdownDescription": "{{{include 'base'}}}"
@@ -71,7 +72,8 @@
             "type": "string",
             "enum": [
                 "ubuntu@20.04",
-                "ubuntu@22.04"
+                "ubuntu@22.04",
+                "ubuntu@24.04"
             ],
             "markdownDescription": "{{{include 'build-base'}}}"
         },
