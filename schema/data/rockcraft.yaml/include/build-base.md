@@ -1,7 +1,7 @@
 ``build-base``
 --------------
 
-**Type**: One of ``ubuntu@20.04 | ubuntu@22.04``
+**Type**: One of ``ubuntu@20.04 | ubuntu@22.04 | ubuntu@24.04``
 
 **Required**: Yes, if ``base`` is ``bare``
 
