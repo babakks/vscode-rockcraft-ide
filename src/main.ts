@@ -12,10 +12,10 @@ import { integrateWithYAMLExtension } from './schema';
 import { RockcraftTreeDataProvider } from './tree';
 import { DocumentWatcher } from './watcher';
 
-const TELEMETRY_INSTRUMENTATION_KEY = '804eccd9-3d59-4aec-9fcc-9eec10a562c4';
+const TELEMETRY_CONNECTION_STRING = 'InstrumentationKey=804eccd9-3d59-4aec-9fcc-9eec10a562c4;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/;ApplicationId=8b34d986-cf9d-447c-89bb-7ba15eecca62';
 
 export async function activate(context: ExtensionContext) {
-    const reporter = new TelemetryReporter(context.extensionMode === ExtensionMode.Production ? TELEMETRY_INSTRUMENTATION_KEY : '');
+    const reporter = new TelemetryReporter(context.extensionMode === ExtensionMode.Production ? TELEMETRY_CONNECTION_STRING : '');
     context.subscriptions.push(reporter);
 
     const output = window.createOutputChannel('Rockcraft IDE');
