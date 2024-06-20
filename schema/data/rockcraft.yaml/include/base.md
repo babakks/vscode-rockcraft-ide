@@ -1,7 +1,7 @@
 ``base``
 --------
 
-**Type**: One of ``ubuntu@20.04 | ubuntu@22.04 | bare``
+**Type**: One of ``ubuntu@20.04 | ubuntu@22.04 | ubuntu@24.04 | bare``
 
 **Required**: Yes
 
