@@ -89,11 +89,11 @@ export type MapWithNode<T> = AttachedNode & {
     entries?: { [key: string]: WithNode<T> };
 };
 
-export type RockBase = 'ubuntu@20.04' | 'ubuntu@22.04' | 'bare';
-export const validRockBaseValues: string[] = ['ubuntu@20.04', 'ubuntu@22.04', 'bare'] satisfies RockBase[];
+export type RockBase = 'ubuntu@20.04' | 'ubuntu@22.04' | 'ubuntu@24.04' | 'bare';
+export const validRockBaseValues: string[] = ['ubuntu@20.04', 'ubuntu@22.04', 'ubuntu@24.04', 'bare'] satisfies RockBase[];
 
-export type RockBuildBase = 'ubuntu@20.04' | 'ubuntu@22.04';
-export const validRockBuildBaseValues: string[] = ['ubuntu@20.04', 'ubuntu@22.04'] satisfies RockBuildBase[];
+export type RockBuildBase = 'ubuntu@20.04' | 'ubuntu@22.04' | 'ubuntu@24.04';
+export const validRockBuildBaseValues: string[] = ['ubuntu@20.04', 'ubuntu@22.04', 'ubuntu@24.04'] satisfies RockBuildBase[];
 
 export type SupportedRockPlatform = 'amd64' | 'arm64' | 'armhf' | 'i386' | 'ppc64el' | 'riscv64' | 's390x';
 export const validSupportedRockPlatformValues: string[] = ['amd64', 'arm64', 'armhf', 'i386', 'ppc64el', 'riscv64', 's390x'] satisfies SupportedRockPlatform[];
